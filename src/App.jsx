@@ -4,7 +4,10 @@ import StaffRegister from './admin/StaffRegister.jsx'
 const App = () => {
   return (
     <Routes>
+      {/*Routes của admin*/}
       <Route path="/admin/register" element={<StaffRegister />} />
+      <Route path="/admin/login" element={<StaffLogin />} />
+
       <Route path="*" element={<div>404 Not Found</div>} />
     </Routes>
   )
