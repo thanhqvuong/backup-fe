@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import axios from "axios";
 import "react-toastify/dist/ReactToastify.css";
 
 export default function StaffRegister() {
+  const navigate = useNavigate();
+
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -75,12 +77,16 @@ export default function StaffRegister() {
 
     try {
       const res = await axios.post(
-  "https://backend-njgx.onrender.com/admin-registers",
-  form, 
-  { withCredentials: true }
-);
+        "https://backend-njgx.onrender.com/admin-registers",
+        form,
+        { withCredentials: true }
+      );
 
       toast.success(res.data.message || "Đăng ký thành công!");
+
+      setTimeout(() => {
+        navigate("/admin/login");
+      }, 1500);
 
       setForm({
         name: "",
@@ -212,7 +218,7 @@ export default function StaffRegister() {
 
         <div className="text-center mt-6">
           <p className="text-sm mb-2">
-            Đã có tài khoản? <Link to="/login" className="text-blue-500">Đăng nhập</Link>
+            Đã có tài khoản? <Link to="/admin/login" className="text-blue-500">Đăng nhập</Link>
           </p>
           <button type="submit" className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700" disabled={isLoading}>
             ĐĂNG KÝ
