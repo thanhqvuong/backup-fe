@@ -74,11 +74,11 @@ export default function StaffRegister() {
     setIsLoading(true);
 
     try {
-      const { confirmPassword, ...dataToSend } = form;
-
-      const res = await axios.post("https://backend-njgx.onrender.com/admin-registers", dataToSend, {
-        withCredentials: true,
-      });
+      const res = await axios.post(
+  "https://backend-njgx.onrender.com/admin-registers",
+  form, 
+  { withCredentials: true }
+);
 
       toast.success(res.data.message || "Đăng ký thành công!");
 
