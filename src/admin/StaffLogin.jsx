@@ -13,7 +13,7 @@ export default function StaffLogin() {
   });
 
   const [errors, setErrors] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [progress, setProgress] = useState(0);
 
@@ -51,17 +51,10 @@ export default function StaffLogin() {
       localStorage.setItem("accessToken", res.data.accessToken);
       localStorage.setItem("refreshToken", res.data.refreshToken);
 
-      let percent = 0;
-      const fakeProgress = setInterval(() => {
-        percent += 5;
-        setProgress(percent);
-        if (percent >= 100) {
-          clearInterval(fakeProgress);
-          setTimeout(() => {
-            navigate("/admin/dashboard");
-          }, 1500);
-        }
-      }, 50);
+      setTimeout(() => {
+        setIsLoading(false);
+        navigate("/admin/dashboard");
+      }, 1500);
     } catch (error) {
       const message = error.response?.data?.message || "Đăng nhập thất bại. Vui lòng thử lại.";
       toast.error(message);
@@ -89,6 +82,13 @@ export default function StaffLogin() {
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setIsLoading(false);
+    }, 1500);
+    return () => clearTimeout(timeout);
+  }, []);
+
   return (
     <div className="min-h-screen bg-white flex flex-col items-center pt-8">
       <ToastContainer position="top-right" />
@@ -99,9 +99,9 @@ export default function StaffLogin() {
           <div className="w-96 border-4 border-black p-1">
             <div
               className="bg-green-500 text-white text-sm text-center transition-all duration-100"
-              style={{ width: `${progress}%` }}
+              style={{ width: "100%" }}
             >
-              {progress}%
+              Loading...
             </div>
           </div>
         </div>
