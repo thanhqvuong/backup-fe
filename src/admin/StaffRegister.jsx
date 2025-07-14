@@ -18,7 +18,6 @@ export default function StaffRegister() {
 
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-  const [progress, setProgress] = useState(0);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -72,23 +71,27 @@ export default function StaffRegister() {
     if (!validateForm()) return;
 
     setIsLoading(true);
-    setProgress(0);
-
-    let percent = 0;
-    const fakeProgress = setInterval(() => {
-      percent += 5;
-      setProgress(percent);
-      if (percent >= 100) {
-        clearInterval(fakeProgress);
-        const success = Math.random() > 0.3;
-        if (success) {
-          toast.success("Đăng ký thành công!");
-        } else {
-          toast.error("Đăng ký thất bại. Vui lòng thử lại.");
-        }
-        setIsLoading(false);
-      }
-    }, 100);
+    try {
+      const response = await axios.post("https://backend-njgx.onrender.com/admin-registers", form, {
+        withCredentials: true,
+      });
+      toast.success(response.data.message || "Đăng ký thành công!");
+      setForm({
+        name: "",
+        email: "",
+        phone: "",
+        password: "",
+        confirmPassword: "",
+        dob: "",
+        gender: "",
+        role: "",
+      });
+    } catch (error) {
+      const message = error.response?.data?.message || "Đăng ký thất bại. Vui lòng thử lại.";
+      toast.error(message);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -98,14 +101,6 @@ export default function StaffRegister() {
       {isLoading && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center z-50">
           <p className="text-white text-2xl font-bold mb-4">ĐANG XỬ LÝ</p>
-          <div className="w-96 border-4 border-black p-1">
-            <div
-              className="bg-green-500 text-white text-sm text-center transition-all duration-100"
-              style={{ width: `${progress}%` }}
-            >
-              {progress}%
-            </div>
-          </div>
         </div>
       )}
 
